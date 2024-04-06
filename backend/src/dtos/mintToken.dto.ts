@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class MintTokenDto {
-    @ApiProperty({type: String, required: true, default: "My Address"})
-    address: string;
+  @ApiProperty({ type: String, required: true, default: 'My Address' })
+  address: string;
 }

@@ -31,7 +31,9 @@ export function RequestTokens(params: { address: string }) {
 
     return (
         <div>
-            <p>Result from API: {data.result ? 'worked' : 'failed'}</p>
+            <p>Result from API: {data.result
+              ? '✅ success'
+              : '🛑 failed'}</p>
         </div>
     );
 }

@@ -1,8 +1,10 @@
 import {useContractRead} from "wagmi";
 
+const myTokenAddress = "0x8101b1ccc6829975e4ccf3a3525a689f4c564c72"
+
 export function TokenName() {
     const {data, isError, isLoading} = useContractRead({
-        address: "0x37dBD10E7994AAcF6132cac7d33bcA899bd2C660",
+        address:`${myTokenAddress}`,
         abi: [
             {
                 constant: true,
