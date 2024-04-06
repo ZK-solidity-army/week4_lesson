@@ -3922,6 +3922,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"all@npm:^0.0.0":
+  version: 0.0.0
+  resolution: "all@npm:0.0.0"
+  checksum: 08f10db2350cf5ec81cfb151e89493c5e9e6f43263e2a2dcfcf44a99ac60e1f811b37b3fafd249d2dd1cedb88d38dca20ef1996abb3dd1f0e5d0020f61f80d71
+  languageName: node
+  linkType: hard
+
 "amdefine@npm:>=0.0.4":
   version: 1.0.1
   resolution: "amdefine@npm:1.0.1"
@@ -12272,6 +12279,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "se-2@workspace:."
   dependencies:
+    all: ^0.0.0
     husky: ^8.0.1
     lint-staged: ^13.0.3
   languageName: unknown
