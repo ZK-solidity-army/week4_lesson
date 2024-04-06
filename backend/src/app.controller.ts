@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
+import { MintTokenDto } from './dtos/mintToken.dto';
 
 @Controller()
 export class AppController {
@@ -27,22 +28,22 @@ export class AppController {
 
   @Get('transaction-receipt')
   async getTransactionReceipt(@Query('hash') hash: string) {
-    return { result: this.appService.getTransactionReceipt(hash) };
+    return { result: await this.appService.getTransactionReceipt(hash) };
   }
 
   // MINT TOKENS
-  // @Get('server-wallet-address')
-  // getServerWalletAddress() {
-  //   return { result: this.appService.getServerWalletAddress() };
-  // }
-  //
-  // @Get('check-minter-role')
-  // checkMinterRole(@Query('address') address: string) {
-  //   return { result: await this.appService.checkMinterRole(address) };
-  // }
-  //
-  // @Post('mint-tokens')
-  // async mintTokens(@Body() body: any) {
-  //   return { result: await this.appService.mintTokens(body.address) };
-  // }
+  @Get('server-wallet-address')
+  getServerWalletAddress() {
+    return { result: this.appService.getServerWalletAddress() };
+  }
+
+  @Get('check-minter-role')
+  checkMinterRole(@Query('address') address: string) {
+    return { result: this.appService.checkMinterRole(address) };
+  }
+
+  @Post('mint-tokens')
+  async mintTokens(@Body() body: MintTokenDto) {
+    return { result: this.appService.mintTokens(body.address) };
+  }
 }

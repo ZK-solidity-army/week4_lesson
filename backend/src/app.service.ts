@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createPublicClient, formatEther, http } from 'viem';
+import { createPublicClient, createWalletClient, formatEther, http } from 'viem';
 import * as chains from 'viem/chains';
 import * as tokenJson from '../assets/MyToken.json';
 import * as process from 'process';
@@ -7,6 +7,7 @@ import * as process from 'process';
 @Injectable()
 export class AppService {
   publicClient;
+  walletClient;
 
   constructor() {
     const rpcEndpointUrl = process.env.RPC_ENDPOINT_URL;
@@ -15,6 +16,10 @@ export class AppService {
     this.publicClient = createPublicClient({
       chain: chains.sepolia,
       transport: transport,
+    });
+    this.walletClient = createWalletClient({
+      chain: chains.sepolia,
+      transport: http(process.env.PRIVATE_KEY),
     });
   }
 
@@ -54,6 +59,24 @@ export class AppService {
       hash: hash,
     });
     console.log({ transactionReceipt });
+    transactionReceipt.blockNumber = transactionReceipt.blockNumber.toString();
+    transactionReceipt.gasUsed = transactionReceipt.gasUsed.toString();
+    transactionReceipt.cumulativeGasUsed =
+      transactionReceipt.cumulativeGasUsed.toString();
+    transactionReceipt.effectiveGasPrice =
+      transactionReceipt.effectiveGasPrice.toString();
     return transactionReceipt;
+  }
+
+  async getServerWalletAddress() {
+    return await this.walletClient.getAddress();
+  }
+
+  mintTokens(address: any) {
+    return `Minting tokens for ${address}`;
+  }
+
+  checkMinterRole(address: string) {
+    throw new Error(`${address} Method not implemented.`);
   }
 }
