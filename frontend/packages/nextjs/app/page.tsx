@@ -19,6 +19,8 @@ const Home: NextPage = () => {
                         </code>
                     </p>
                     <WalletInfo/>
+
+
                 </div>
             </div>
         </>

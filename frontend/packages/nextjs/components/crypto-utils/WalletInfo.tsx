@@ -3,10 +3,11 @@
 // @formatter:on
 
 import {useAccount, useNetwork} from "wagmi";
-import {Votes} from "./Votes";
 import {WalletBalance} from "./WalletBalance";
 import {TokenInfo} from "./TokenInfo";
+import {ApiData} from "~~/components/api/ApiData";
 import {Mint} from "~~/components/crypto-utils/Mint";
+import {Votes} from "~~/components/crypto-utils/Votes";
 import {Delegate} from "~~/components/crypto-utils/Delegate";
 
 export function WalletInfo() {
@@ -15,13 +16,14 @@ export function WalletInfo() {
     if (address)
         return (
             <div>
-                <p>Your account address is {address}</p>
-                <p>Connected to the network {chain?.name}</p>
+                <p>Your wallet: {address}</p>
+                <p>Chain: {chain?.name}</p>
+                <WalletBalance address={address as `0x${string}`}></WalletBalance>
                 <Mint></Mint>
                 <Votes></Votes>
                 <Delegate></Delegate>
-                <WalletBalance address={address as `0x${string}`}></WalletBalance>
                 <TokenInfo address={address as `0x${string}`}></TokenInfo>
+                <ApiData address={address as `0x${string}`}></ApiData>
             </div>
         );
     if (isConnecting)

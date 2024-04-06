@@ -1,0 +1,1 @@
+export const backend_base_uri = 'http://localhost:3001'
