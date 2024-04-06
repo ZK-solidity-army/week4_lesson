@@ -52,6 +52,7 @@ module.exports = {
           "base-200": "#2A3655",
           "base-300": "#212638",
           "base-content": "#F9FBFF",
+          "expansion": "#f7c631",
           info: "#385183",
           success: "#34EEB6",
           warning: "#FFCF72",
