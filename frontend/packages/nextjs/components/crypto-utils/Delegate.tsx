@@ -7,35 +7,22 @@ import { DelegateButton } from '~~/components/api/DelegateButton';
 
 export function Delegate(params: { address: `0x${string}` }) {
   const [tokenAddress, setTokenAddress] = useState('');
-  const [proposalInput, setProposalInput] = useState('');
   const [amountToVote, setAmountToVote] = useState('');
-  const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage();
+  const { data, isError, isSuccess } = useSignMessage();
   return (
     <div className="card w-96 bg-primary text-primary-content mt-2">
       <div className="card-body">
         <h2 className="card-title">Delegate</h2>
         <div className="form-control w-full max-w-xs my-1">
           <label className="label">
-            <span className="label-text">Enter tokenized ballot CA:</span>
+            <span className="label-text">Enter wallet address to delegate votes:</span>
           </label>
           <input
             type="text"
-            placeholder="Type here"
+            placeholder="0x12345.....12345"
             className="input input-bordered w-full max-w-xs"
             value={tokenAddress}
             onChange={e => setTokenAddress(e.target.value)}
-          />
-        </div>
-        <div className="form-control w-full max-w-xs my-1">
-          <label className="label">
-            <span className="label-text">Enter proposal:</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input input-bordered w-full max-w-xs"
-            value={proposalInput}
-            onChange={e => setProposalInput(e.target.value)}
           />
         </div>
         <div className="form-control w-full max-w-xs my-1">
@@ -44,27 +31,18 @@ export function Delegate(params: { address: `0x${string}` }) {
           </label>
           <input
             type="text"
-            placeholder="Type here"
+            placeholder="123456..."
             className="input input-bordered w-full max-w-xs"
             value={amountToVote}
             onChange={e => setAmountToVote(e.target.value)}
           />
         </div>
-        <button
-          className="btn btn-active btn-neutral"
-          disabled={isLoading}
-          onClick={() =>
-            signMessage({
-              message: tokenAddress,
-            })
-          }
-        >
-          Sign message
-        </button>
+
         <DelegateButton address={params.address}></DelegateButton>
         {isSuccess && <div>Signature: {data}</div>}
         {isError && <div>Error signing message</div>}
       </div>
     </div>
-  );
+  )
+    ;
 }

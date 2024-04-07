@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { backend_base_uri } from '~~/components/api/utils/variables';
 
-export function MintButton(params: { address: string }) {
+export function MintButton(params: { address: `0x${string}`; amount: string; }) {
   const [data, setData] = useState<{ result: boolean }>();
   const [isLoading, setLoading] = useState(false);
-  const body = { address: params.address };
+  const { address, amount } = params;
+  const body = {
+    address: address,
+    amount: amount,
+  };
 
   if (isLoading) return <p>Requesting tokens from API...</p>;
   if (!data)
@@ -19,8 +23,8 @@ export function MintButton(params: { address: string }) {
             body: JSON.stringify(body),
           })
             .then((res) => res.json())
-            .then((data) => {
-              setData(data);
+            .then((responseData) => {
+              setData(responseData);
               setLoading(false);
             });
         }}

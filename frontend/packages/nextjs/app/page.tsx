@@ -2,6 +2,8 @@
 "use client";
 
 // @formatter:on
+
+import { WalletInfo } from '../components/crypto-utils/WalletInfo';
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
@@ -22,6 +24,7 @@ const Home: NextPage = () => {
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
+
         <div className="flex flex-col w-full place-items-center">
           {isMinter && (
             <div className="grid w-1/2 card-body bg-base-300 rounded-box place-items-start">
@@ -41,7 +44,9 @@ const Home: NextPage = () => {
           <div className="grid w-1/2 card-body bg-base-300 rounded-box place-items-start">
             <span className="block text-2xl font-bold">Propositions</span>
             {/*  TODO: list the propositions and add voting button*/}
+                <WalletInfo />
           </div>
+
         </div>
       </div>
     </>
