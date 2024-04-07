@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { parseEther } from 'viem';
 
-import { AppService } from './app.service';
-import { MintTokenDto } from './dtos/mintToken.dto';
+import { AppService } from '../services/app';
+import { MintTokenDto } from '../dtos/mintToken.dto';
 
 @Controller()
 export class AppController {
