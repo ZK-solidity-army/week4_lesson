@@ -25,7 +25,7 @@ export function DelegateButton(params: { address: string }) {
             });
         }}
       >
-        Mint Tokens
+        Delegate votes
       </button>
     );
 

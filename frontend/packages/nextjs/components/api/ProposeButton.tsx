@@ -1,26 +1,30 @@
 import { useState } from 'react';
 import { backend_base_uri } from '~~/components/api/utils/variables';
 
-export function VoteButton(params: { address: string }) {
+
+export function ProposeButton(params: {
+  address: `0x${string}`; proposal: string; amount: string;
+}) {
   const [data, setData] = useState<{ result: boolean }>();
   const [isLoading, setLoading] = useState(false);
-  const body = { address: params.address };
+  const { address, proposal, amount } = params;
+  const body = { address: address, proposal: proposal, amount: amount };
 
   if (isLoading) return <p>Requesting tokens from API...</p>;
-  if (!data)
+  if (!data) {
     return (
       <button
         className="btn btn-active btn-neutral"
         onClick={() => {
           setLoading(true);
-          fetch(`${backend_base_uri}/mint-tokens`, {
+          fetch(`${backend_base_uri}/propose`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
           })
             .then((res) => res.json())
-            .then((data) => {
-              setData(data);
+            .then((responseData) => {
+              setData(responseData);
               setLoading(false);
             });
         }}
@@ -28,12 +32,11 @@ export function VoteButton(params: { address: string }) {
         Request tokens
       </button>
     );
+  }
 
   return (
     <div>
-      <p>Result from API: {data.result
-        ? '✅ success'
-        : '🛑 failed'}</p>
+      <p>Result from API: {data.result ? '✅ success' : '🛑 failed'}</p>
     </div>
   );
 }
