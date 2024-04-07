@@ -1,5 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { parseEther } from 'viem';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+} from '@nestjs/common';
+import { isAddress, parseEther } from 'viem';
 
 import { MyTokenService } from '../services/myToken';
 import { MintTokenDto } from '../dtos/mintToken.dto';
@@ -37,11 +44,20 @@ export class MyTokenController {
 
   @Post('mint-tokens')
   async mintTokens(@Body() body: MintTokenDto) {
+    // TODO: move to ValidationPipe
+    if (!isAddress(body.address)) {
+      throw new BadRequestException(`Invalid address ${body.address}`);
+    }
+
+    let amount: bigint;
+    try {
+      amount = parseEther(`${body.amount}`);
+    } catch (e) {
+      throw new BadRequestException(`Invalid amount ${body.amount}`);
+    }
+
     return {
-      result: this.service.mintTokens(
-        body.address,
-        parseEther(`${body.amountToMint}`),
-      ),
+      result: await this.service.mintTokens(body.address, amount),
     };
   }
 }

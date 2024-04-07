@@ -5,5 +5,5 @@ export class MintTokenDto {
   address: `0x${string}`;
 
   @ApiProperty({ type: Number, required: true, default: 1 })
-  amountToMint: number;
+  amount: number;
 }
