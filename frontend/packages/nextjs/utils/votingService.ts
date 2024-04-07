@@ -1,16 +1,17 @@
-import { abi } from "../../hardhat/artifacts/contracts/MyToken.sol/MyToken.json";
+import * as chains from "viem/chains";
 import { createPublicClient, http } from "viem";
-import { sepolia } from "viem/chains";
+
+import deployedContracts from "~~/contracts/deployedContracts";
 
 export const publicClient = createPublicClient({
-  chain: sepolia,
+  chain: chains.sepolia,
   transport: http("https://sepolia.drpc.org"),
 });
 
 export const isWalletMinter = async (address: string | undefined): Promise<boolean> => {
   const data = await publicClient.readContract({
     address: address as string,
-    abi: abi,
+    abi: deployedContracts[chains.sepolia.id]["MyToken"].abi,
     functionName: "MINTER_ROLE",
   });
 
