@@ -58,10 +58,7 @@ export class MyTokenService {
       functionName: 'mint',
       args: [address, amountToMint],
     });
-    const receipt = await this.publicClient.waitForTransactionReceipt({
-      hash: mintTx,
-    });
-    return receipt;
+    return mintTx;
   }
 
   async getTokenName() {

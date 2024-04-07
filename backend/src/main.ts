@@ -9,7 +9,13 @@ async function bootstrap() {
 
   const allowedOrigins = configService.get<string[]>('ALLOWED_HOSTS');
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
   });
 
   const config = new DocumentBuilder()
