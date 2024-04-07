@@ -14,6 +14,7 @@ import * as tokenJson from '../assets/MyToken.json';
 export class AppService {
   publicClient: any;
   walletClient: any;
+  contractAddress: `0x${string}`;
 
   constructor(private readonly configService: ConfigService) {
     this.configService = configService;
@@ -27,14 +28,21 @@ export class AppService {
       transport: http(this.configService.get<string>('RPC_ENDPOINT_URL')),
       chain: chains.sepolia,
     });
+    this.contractAddress = `0x${this.configService.get<`0x${string}`>('MY_TOKEN_ADDRESS')}`;
   }
 
-  checkMinterRole(address: string) {
-    throw new Error(`${address} Method not implemented.`);
+  async checkMinterRole() {
+    const minterRole = await this.publicClient.readContract({
+      address: this.contractAddress,
+      abi: tokenJson.abi,
+      functionName: 'MINTER_ROLE',
+      args: [],
+    });
+    return minterRole;
   }
 
-  getContractAddress(): string {
-    return this.configService.get<string>('MY_TOKEN_ADDRESS');
+  getContractAddress(): `0x${string}` {
+    return this.contractAddress;
   }
 
   getTransactionReceipt(hash: string) {
@@ -51,8 +59,18 @@ export class AppService {
     return transactionReceipt;
   }
 
-  mintTokens(address: any) {
-    return `Minting tokens for ${address}`;
+  async mintTokens(address: `0x${string}`, amountToMint: bigint) {
+    const deployer = this.walletClient;
+    const mintTx = await deployer.writeContract({
+      address: this.contractAddress,
+      abi: tokenJson.abi,
+      functionName: 'mint',
+      args: [address, amountToMint],
+    });
+    const receipt = await this.publicClient.waitForTransactionReceipt({
+      hash: mintTx,
+    });
+    return receipt;
   }
 
   async getServerWalletAddress() {
