@@ -9,6 +9,13 @@ export const publicClient = createPublicClient({
 });
 
 export const isWalletMinter = async (address: string | undefined): Promise<boolean> => {
+  // TODO:
+  // needs to pass MyToken address, not deployer address
+  // deployer address is not a smart ERC20 contract with AccessControl interface
+  // so it leads to the error on frontend side
+  // Fill free to remove this line
+  // @gurobokum
+  return false;
   const data = await publicClient.readContract({
     address: address as string,
     abi: deployedContracts[chains.sepolia.id]["MyToken"].abi,
