@@ -17,7 +17,6 @@ export function Propositions(params: { address: `0x${string}` }) {
     <div className="card w-96 bg-primary text-primary-content mt-2">
       <div className="card-body">
         <h2 className="card-title">Choose proposition to vote</h2>
-
         <div className="form-control w-full max-w-xs my-1">
           <label className="label">
             <span className="label-text">Select proposal:</span>
