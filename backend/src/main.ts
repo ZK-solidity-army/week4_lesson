@@ -1,10 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  const configService = app.get(ConfigService);
+
+  const allowedOrigins = configService.get<string[]>('ALLOWED_HOSTS');
+  app.enableCors({
+    origin: allowedOrigins,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('API example')
     .setDescription('The API description')
