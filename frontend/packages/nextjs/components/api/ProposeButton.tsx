@@ -29,7 +29,7 @@ export function ProposeButton(params: {
             });
         }}
       >
-        Request tokens
+        Vote
       </button>
     );
   }
