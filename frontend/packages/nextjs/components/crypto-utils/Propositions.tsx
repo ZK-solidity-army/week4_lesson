@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import { useSignMessage } from 'wagmi';
-import { ProposeButton } from '~~/components/api/ProposeButton';
+import React, { useState } from "react";
+import { useSignMessage } from "wagmi";
+import { ProposeButton } from "~~/components/api/ProposeButton";
 
 export function Propositions(params: { address: `0x${string}` }) {
-  const [selectedProposal, setSelectedProposal] = useState('');
-  const [amount, setAmount] = useState('');
+  const [selectedProposal, setSelectedProposal] = useState("");
+  const [amount, setAmount] = useState("");
   const { data, isError, isSuccess } = useSignMessage();
 
-  const proposals = ['BTC', 'SOL', 'ETH', 'TON']; //TODO: propositions fetch from oracle? from backend?
+  const proposals = ["BTC", "SOL", "ETH", "TON"]; //TODO: propositions fetch from oracle? from backend?
 
   const handleProposalChange = (e: any) => {
     setSelectedProposal(e.target.value);
   };
 
   return (
-    <div className="card w-96 bg-primary text-primary-content mt-2">
+    <div className="card bg-primary text-primary-content mt-2">
       <div className="card-body">
         <h2 className="card-title">Choose proposition to vote</h2>
         <div className="form-control w-full max-w-xs my-1">
@@ -28,7 +28,9 @@ export function Propositions(params: { address: `0x${string}` }) {
           >
             <option value="">Select a proposal</option>
             {proposals.map((proposal, index) => (
-              <option key={index} value={proposal}>{proposal}</option>
+              <option key={index} value={proposal}>
+                {proposal}
+              </option>
             ))}
           </select>
         </div>
@@ -42,15 +44,11 @@ export function Propositions(params: { address: `0x${string}` }) {
             placeholder="Type here"
             className="input input-bordered w-full max-w-xs"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={e => setAmount(e.target.value)}
           />
         </div>
 
-        <ProposeButton
-          address={params.address}
-          proposal={selectedProposal}
-          amount={amount}
-        />
+        <ProposeButton address={params.address} proposal={selectedProposal} amount={amount} />
 
         {isSuccess && <div>Signature: {data}</div>}
         {isError && <div>Error signing message</div>}

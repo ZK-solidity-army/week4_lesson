@@ -1,44 +1,49 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import * as chains from "viem/chains";
 import { useContractWrite } from "wagmi";
 
-export function Delegate({ address, myTokenAddress }: { address: `0x${string}`; myTokenAddress: `0x${string}` | null }) {
+import deployedContracts from "~~/contracts/deployedContracts";
+import { getBlockExplorerTxLink } from "~~/utils/scaffold-eth";
+
+type TypedError = Error & { shortMessage: string };
+
+export default function Delegate({
+  address,
+  myTokenAddress,
+}: {
+  address: `0x${string}`;
+  myTokenAddress: `0x${string}`;
+}) {
   const [tokenAddress, setTokenAddress] = useState("");
-  // TODO: use import from generated abi
-  const { data, isError, isSuccess, isLoading, write } = useContractWrite({
-    address: myTokenAddress as string | undefined,
-    abi: [
-      {
-        inputs: [
-          {
-            internalType: "address",
-            name: "delegatee",
-            type: "address",
-          },
-        ],
-        name: "delegate",
-        outputs: [],
-        stateMutability: "nonpayable",
-        type: "function",
-      },
-    ],
+  const { data, isError, isSuccess, isLoading, write, error } = useContractWrite({
+    address: myTokenAddress,
+    abi: deployedContracts[chains.sepolia.id]["MyToken"].abi,
     functionName: "delegate",
-    args: [address],
   });
+  const typedError = error as TypedError;
+
+  const onSubmit = () => {
+    if (!tokenAddress) return;
+    write({
+      args: [tokenAddress],
+    });
+  };
 
   return (
-    <div className="card bg-primary text-primary-content mt-2">
+    <div className="card bg-primary text-primary-content mt-2 pb-2">
       <div className="card-body">
         <h2 className="card-title">Delegate</h2>
-        <div className="form-control w-full max-w-xs my-1">
+        <div className="form-control w-full my-1">
           <label className="label">
             <span className="label-text">Enter wallet address to delegate votes:</span>
           </label>
           <input
             type="text"
             placeholder="0x12345.....12345"
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full"
             value={tokenAddress}
             onChange={e => setTokenAddress(e.target.value)}
           />
@@ -46,15 +51,26 @@ export function Delegate({ address, myTokenAddress }: { address: `0x${string}`; 
         <button className="btn btn-active btn-neutral" onClick={() => setTokenAddress(address)}>
           Or paste your address
         </button>
-        <button className="btn btn-active btn-neutral" onClick={() => write()}>
+        <button className="btn btn-active btn-neutral" onClick={onSubmit}>
           Delegate votes
         </button>
         <p className="h-5 my-1">
           {isLoading && <p className="my-auto">🟡 Delegating voting power...</p>}
-          {isSuccess && <div>Signature: {JSON.stringify(data)}</div>}
-          {isError && <div>🛑 Error sending transaction {JSON.stringify(data)}</div>}
+          {isError && <div>🛑 Error sending transaction: {typedError ? typedError.shortMessage : ""}</div>}
         </p>
+        {isSuccess && data && data.hash && (
+          <p className="mt-5 mb-2">
+            <Link target="_blank" href={getBlockExplorerTxLink(chains.sepolia.id, data.hash)}>
+              {truncate(data.hash, 30)}
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
 }
+
+// TODO: move to utils or use lodash
+const truncate = (str: string, n: number) => {
+  return str.length > n ? str.substr(0, n - 1) + "..." : str;
+};
