@@ -3,7 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { TokenizedBallotService } from 'src/services/tokenizedBallot';
 
-@ApiTags('tokenizedBallot')
+@ApiTags('TokenizedBallot')
 @Controller('tokenized-ballot')
 export class TokenizedBallotController {
   constructor(private readonly service: TokenizedBallotService) {}
