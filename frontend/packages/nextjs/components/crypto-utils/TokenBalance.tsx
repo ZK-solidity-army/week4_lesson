@@ -1,35 +1,48 @@
-import {useContractRead} from "wagmi";
+import { useContractRead } from "wagmi";
 
-export function TokenBalance(params: { address: `0x${string}` }) {
-    const {data, isError, isLoading} = useContractRead({
-        address: "0x37dBD10E7994AAcF6132cac7d33bcA899bd2C660",
-        abi: [
-            {
-                constant: true,
-                inputs: [
-                    {
-                        name: "_owner",
-                        type: "address",
-                    },
-                ],
-                name: "balanceOf",
-                outputs: [
-                    {
-                        name: "balance",
-                        type: "uint256",
-                    },
-                ],
-                payable: false,
-                stateMutability: "view",
-                type: "function",
-            },
+export default function TokenBalance({
+  address,
+  myTokenAddress,
+}: {
+  address: `0x${string}`;
+  myTokenAddress: `0x${string}`;
+}) {
+  const { data, isError, isLoading } = useContractRead({
+    address: myTokenAddress,
+    abi: [
+      {
+        constant: true,
+        inputs: [
+          {
+            name: "_owner",
+            type: "address",
+          },
         ],
-        functionName: "balanceOf",
-        args: [params.address],
-    });
-    const balance = typeof data === "number" ? data : 0;
-    if (isLoading) return <div>Fetching balance…</div>;
-    if (isError) return <div>Error fetching balance</div>;
+        name: "balanceOf",
+        outputs: [
+          {
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        payable: false,
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
+    functionName: "balanceOf",
+    args: [address],
+  });
+  const balance = typeof data === "number" ? data : 0;
+  if (isLoading) return <div>Fetching balance…</div>;
+  if (isError) return <div>Error fetching balance {JSON.stringify(data)}</div>;
 
-    return <div>Balance: {balance}</div>;
+  return (
+    <div className="card bg-primary text-primary-content">
+      <div className="card-body">
+        <h2 className="card-title">Token Balance</h2>
+        <p>{balance}</p>
+      </div>
+    </div>
+  );
 }
