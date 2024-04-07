@@ -42,7 +42,6 @@ const Home: NextPage = () => {
 
         <div className="grid w-2/3 card-body bg-base-300 rounded-box place-items-start">
           <span className="block text-2xl font-bold">Propositions</span>
-          {/*  TODO: list the propositions and add voting button*/}
           <WalletInfo />
         </div>
       </div>

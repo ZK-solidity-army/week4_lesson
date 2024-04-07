@@ -9,3 +9,12 @@ export const mintTokens = async ({ address, amount }: { address: `0x${string}`; 
 
   return res.json();
 };
+
+export const getMyTokenContractAddress = async () => {
+  const res = await fetch(`${API_URL}/my-token/contract-address`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return res.json();
+};
