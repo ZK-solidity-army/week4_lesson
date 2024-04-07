@@ -1,57 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { createPublicClient, createWalletClient, formatEther, http } from 'viem';
+import { ConfigService } from '@nestjs/config';
+import {
+  createPublicClient,
+  createWalletClient,
+  formatEther,
+  http,
+} from 'viem';
 import * as chains from 'viem/chains';
+
 import * as tokenJson from '../assets/MyToken.json';
-import * as process from 'process';
 
 @Injectable()
 export class AppService {
-  publicClient;
-  walletClient;
+  publicClient: any;
+  walletClient: any;
 
-  constructor() {
-    const rpcEndpointUrl = process.env.RPC_ENDPOINT_URL;
-    const transport = http(rpcEndpointUrl);
+  constructor(private readonly configService: ConfigService) {
+    this.configService = configService;
 
     this.publicClient = createPublicClient({
       chain: chains.sepolia,
-      transport: transport,
+      transport: http(this.configService.get<string>('RPC_ENDPOINT_URL')),
     });
     this.walletClient = createWalletClient({
+      key: this.configService.get<string>('DEPLOYER_PRIVATE_KEY'),
+      transport: http(this.configService.get<string>('RPC_ENDPOINT_URL')),
       chain: chains.sepolia,
-      transport: http(process.env.PRIVATE_KEY),
     });
   }
 
-  async getTokenName(): Promise<any> {
-    return await this.publicClient.readContract({
-      address: this.getContractAddress() as `0x${string}`,
-      abi: tokenJson.abi,
-      functionName: 'name',
-    });
+  checkMinterRole(address: string) {
+    throw new Error(`${address} Method not implemented.`);
   }
 
   getContractAddress(): string {
-    return '0x8101b1ccc6829975e4ccf3a3525a689f4c564c72';
-  }
-
-  async getTotalSupply() {
-    const totalSupply = await this.publicClient.readContract({
-      address: this.getContractAddress() as `0x${string}`,
-      abi: tokenJson.abi,
-      functionName: 'totalSupply',
-    });
-    return formatEther(totalSupply as bigint);
-  }
-
-  async getTokenBalance(address: string) {
-    const totalSupply = await this.publicClient.readContract({
-      address: this.getContractAddress() as `0x${string}`,
-      abi: tokenJson.abi,
-      functionName: 'balanceOf',
-      args: [address],
-    });
-    return formatEther(totalSupply as bigint);
+    return this.configService.get<string>('MY_TOKEN_ADDRESS');
   }
 
   getTransactionReceipt(hash: string) {
@@ -68,15 +51,38 @@ export class AppService {
     return transactionReceipt;
   }
 
-  async getServerWalletAddress() {
-    return await this.walletClient.getAddress();
-  }
-
   mintTokens(address: any) {
     return `Minting tokens for ${address}`;
   }
 
-  checkMinterRole(address: string) {
-    throw new Error(`${address} Method not implemented.`);
+  async getServerWalletAddress() {
+    return this.walletClient.account ? this.walletClient.account.address : '';
+  }
+
+  async getTokenName() {
+    return await this.publicClient.readContract({
+      address: this.getContractAddress() as `0x${string}`,
+      abi: tokenJson.abi,
+      functionName: 'name',
+    });
+  }
+
+  async getTokenBalance(address: string) {
+    const totalSupply = await this.publicClient.readContract({
+      address: this.getContractAddress() as `0x${string}`,
+      abi: tokenJson.abi,
+      functionName: 'balanceOf',
+      args: [address],
+    });
+    return formatEther(totalSupply as bigint);
+  }
+
+  async getTotalSupply() {
+    const totalSupply = await this.publicClient.readContract({
+      address: this.getContractAddress() as `0x${string}`,
+      abi: tokenJson.abi,
+      functionName: 'totalSupply',
+    });
+    return formatEther(totalSupply as bigint);
   }
 }
