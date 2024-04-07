@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useContractWrite } from "wagmi";
 
-export function Delegate({ address, myTokenAddress }: { address: `0x${string}`; myTokenAddress: `0x${string}` }) {
+export function Delegate({ address, myTokenAddress }: { address: `0x${string}`; myTokenAddress: `0x${string}` | null }) {
   const [tokenAddress, setTokenAddress] = useState("");
   // TODO: use import from generated abi
   const { data, isError, isSuccess, isLoading, write } = useContractWrite({
-    address: myTokenAddress,
+    address: myTokenAddress as string | undefined,
     abi: [
       {
         inputs: [
