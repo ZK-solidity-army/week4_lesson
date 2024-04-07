@@ -47,10 +47,21 @@ const Home: NextPage = () => {
         // temporary making every user as minter for testing purposes
         // so the user has opportunity to mint tokens via backend in playground
         // fill free to remove
-        {isMinter && address && (
         */}
+        {!isMinter && address && (
+          <div>
+            <div className="divider" />
+            <div className="sm:w-full lg:w-1/2 mx-auto min-w-56">
+              <div className="mx-5 text-center">
+                <button className="btn btn-active btn-neutral" onClick={() => setIsMinter(true)}>
+                  Become a minter. Magic! ✨
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
-        {address && (
+        {isMinter && address && (
           <div>
             <div className="divider" />
             <div className="sm:w-full lg:w-1/2 mx-auto min-w-56">
