@@ -49,7 +49,7 @@ export class AppController {
     return {
       result: this.appService.mintTokens(
         body.address,
-        parseEther(body.amountToMint),
+        parseEther(`${body.amountToMint}`),
       ),
     };
   }
