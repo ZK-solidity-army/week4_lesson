@@ -1,4 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { parseEther } from 'viem';
+
 import { AppService } from './app.service';
 import { MintTokenDto } from './dtos/mintToken.dto';
 
@@ -45,7 +47,10 @@ export class AppController {
   @Post('mint-tokens')
   async mintTokens(@Body() body: MintTokenDto) {
     return {
-      result: this.appService.mintTokens(body.address, body.amountToMint),
+      result: this.appService.mintTokens(
+        body.address,
+        parseEther(body.amountToMint),
+      ),
     };
   }
 }
