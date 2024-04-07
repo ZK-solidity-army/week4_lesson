@@ -8,7 +8,7 @@ import {
 } from 'viem';
 import * as chains from 'viem/chains';
 
-import * as tokenJson from '../assets/MyToken.json';
+import * as tokenJson from '../../assets/MyToken.json';
 
 @Injectable()
 export class AppService {
@@ -28,7 +28,9 @@ export class AppService {
       transport: http(this.configService.get<string>('RPC_ENDPOINT_URL')),
       chain: chains.sepolia,
     });
-    this.contractAddress = `0x${this.configService.get<`0x${string}`>('MY_TOKEN_ADDRESS')}`;
+    this.contractAddress = `0x${this.configService.get<string>(
+      'MY_TOKEN_ADDRESS',
+    )}`;
   }
 
   async checkMinterRole() {

@@ -13,10 +13,10 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('API example')
+    .setTitle('TokenizedBallot API')
     .setDescription('The API description')
     .setVersion('1.0')
-    .addTag('example')
+    .addTag('tokenizedBallot')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
