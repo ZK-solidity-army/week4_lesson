@@ -38,7 +38,7 @@ export default function TokenizedBallot({ address }: { address: `0x${string}` })
       </div>
       */}
       <div className="md:flex md:flex-row justify-between">
-        <div className="my-3 sm:my-none sm:mr-3">
+        <div className="my-3 sm:my-none sm:mr-3 min-w-[300px]">
           <Delegate address={address as `0x${string}`} myTokenAddress={myTokenAddress} />
         </div>
 
