@@ -1,13 +1,31 @@
-import React, { useState } from "react";
-import { useSignMessage } from "wagmi";
+import React, { useEffect, useState } from "react";
+import { hexToString } from "viem";
+import * as chains from "viem/chains";
+import { useContractRead } from "wagmi";
 import { ProposeButton } from "~~/components/api/ProposeButton";
+import deployedContracts from "~~/contracts/deployedContracts";
 
-export function Propositions(params: { address: `0x${string}` }) {
+export function Propositions({
+  address,
+  tokenizedBallotAddress,
+}: {
+  address: `0x${string}`;
+  tokenizedBallotAddress: `0x${string}`;
+}) {
   const [selectedProposal, setSelectedProposal] = useState("");
   const [amount, setAmount] = useState("");
-  const { data, isError, isSuccess } = useSignMessage();
+  const { data, isError, isLoading } = useContractRead({
+    address: tokenizedBallotAddress,
+    abi: deployedContracts[chains.sepolia.id]["TokenizedBallot"].abi,
+    functionName: "getAllProposals",
+  });
 
-  const proposals = ["BTC", "SOL", "ETH", "TON"]; //TODO: propositions fetch from oracle? from backend?
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (!data) {
+    return <div>No proposals found</div>;
+  }
 
   const handleProposalChange = (e: any) => {
     setSelectedProposal(e.target.value);
@@ -27,11 +45,14 @@ export function Propositions(params: { address: `0x${string}` }) {
             onChange={handleProposalChange}
           >
             <option value="">Select a proposal</option>
-            {proposals.map((proposal, index) => (
-              <option key={index} value={proposal}>
-                {proposal}
-              </option>
-            ))}
+            {data.map((proposal: { name: `0x${string}`; voteCount: bigint }, index) => {
+              const name = hexToString(proposal.name, { size: 32 });
+              return (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -48,9 +69,8 @@ export function Propositions(params: { address: `0x${string}` }) {
           />
         </div>
 
-        <ProposeButton address={params.address} proposal={selectedProposal} amount={amount} />
+        <ProposeButton address={address} proposal={selectedProposal} amount={amount} />
 
-        {isSuccess && <div>Signature: {data}</div>}
         {isError && <div>Error signing message</div>}
       </div>
     </div>
