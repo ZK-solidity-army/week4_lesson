@@ -3,7 +3,7 @@
 
 // @formatter:on
 
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 
