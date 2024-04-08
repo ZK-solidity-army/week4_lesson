@@ -3,14 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import * as chains from "viem/chains";
-import { useSignMessage } from "wagmi";
+import { useSignMessage, useWaitForTransaction } from "wagmi";
 
 import * as API from "~~/api/MyToken";
 import { getBlockExplorerTxLink } from "~~/utils/scaffold-eth";
 
-export default function Mint({ address }: { address: `0x${string}` }) {
+export default function Mint({ address, forceUpdate }: { address: `0x${string}`; forceUpdate: () => void }) {
   const [amount, setAmount] = useState<string>("");
-  const [txHashes, setTxHashes] = useState<string[]>([]);
+  const [txHashes, setTxHashes] = useState<`0x${string}`[]>([]);
   const [isLoading, setLoading] = useState(false);
   const { data, isError, isSuccess } = useSignMessage();
   const [requestError, setRequestError] = useState<string | null>(null);
@@ -33,6 +33,7 @@ export default function Mint({ address }: { address: `0x${string}` }) {
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setRequestError(null);
     setAmount(e.target.value);
+    forceUpdate();
   };
 
   return (
@@ -71,9 +72,7 @@ export default function Mint({ address }: { address: `0x${string}` }) {
               <ul>
                 {txHashes.map((txHash: string) => (
                   <li key={txHash}>
-                    <Link target="_blank" href={getBlockExplorerTxLink(chains.sepolia.id, txHash)}>
-                      {truncate(txHash, 30)}
-                    </Link>
+                    <Transaction txHash={txHash as `0x${string}`} forceUpdate={forceUpdate} />
                   </li>
                 ))}
               </ul>
@@ -84,6 +83,25 @@ export default function Mint({ address }: { address: `0x${string}` }) {
     </div>
   );
 }
+
+const Transaction = ({ txHash, forceUpdate }: { txHash: `0x${string}`; forceUpdate: () => void }) => {
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  useWaitForTransaction({
+    chainId: chains.sepolia.id,
+    hash: txHash,
+    onSuccess: () => {
+      setIsSuccess(true);
+      forceUpdate();
+    },
+  });
+
+  return (
+    <Link target="_blank" href={getBlockExplorerTxLink(chains.sepolia.id, txHash)}>
+      {isSuccess ? "✅ " : "⏳ "} {truncate(txHash, 30)}
+    </Link>
+  );
+};
 
 const truncate = (str: string, n: number) => {
   return str.length > n ? str.substr(0, n - 1) + "..." : str;
