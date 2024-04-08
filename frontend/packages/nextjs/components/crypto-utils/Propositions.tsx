@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { hexToString } from "viem";
 import * as chains from "viem/chains";
 import { useContractRead } from "wagmi";
