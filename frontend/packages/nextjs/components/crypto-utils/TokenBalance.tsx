@@ -30,7 +30,7 @@ const BalanceNode = ({ address, myTokenAddress }: { address: `0x${string}`; myTo
 
   let balanceFormatted = "0";
   if (balance && decimals) {
-    balanceFormatted = (balance / BigInt(10 ** decimals)).toString();
+    balanceFormatted = (Number((balance * 1000n) / BigInt(10 ** decimals)) / 1000).toString();
   }
 
   return (

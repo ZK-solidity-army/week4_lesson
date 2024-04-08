@@ -43,10 +43,7 @@ export default function TokenizedBallot({ address }: { address: `0x${string}` })
         </div>
 
         <div className="my-3 sm:my-none">
-          <Propositions
-            address={address as `0x${string}`}
-            tokenizedBallotAddress={tokenizedBallotAddress as `0x${string}`}
-          />
+          <Propositions tokenizedBallotAddress={tokenizedBallotAddress as `0x${string}`} />
         </div>
       </div>
     </>
