@@ -118,8 +118,8 @@ export function Propositions({ tokenizedBallotAddress }: { tokenizedBallotAddres
           <h2 className="card-title mt-5">Proposals</h2>
           {[...data]
             .sort((a, b) => {
-              if (a > b) return 1;
-              return -1;
+              if (a > b) return -1;
+              return 1;
             })
             .map((proposal: { name: `0x${string}`; voteCount: bigint }, index) => {
               const name = hexToString(proposal.name, { size: 32 });
