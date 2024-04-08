@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import * as API from "~~/api/MyToken";
 import Delegate from "~~/components/crypto-utils/Delegate";
 import { Propositions } from "~~/components/crypto-utils/Propositions";
+import { useTokenizedBallot } from "~~/hooks/useTokenizedBallot";
 
 export default function TokenizedBallot({ address }: { address: `0x${string}` }) {
   const [myTokenAddress, setMyTokenAddress] = useState<`0x${string}` | null>(null);
+  const { contractAddress: tokenizedBallotAddress, isLoading } = useTokenizedBallot();
 
   useEffect(() => {
     API.getMyTokenContractAddress()
@@ -17,7 +19,7 @@ export default function TokenizedBallot({ address }: { address: `0x${string}` })
       });
   }, []);
 
-  if (!myTokenAddress) {
+  if (!myTokenAddress || isLoading) {
     return (
       <div className="text-center">
         <p>Loading...</p>
@@ -41,7 +43,10 @@ export default function TokenizedBallot({ address }: { address: `0x${string}` })
         </div>
 
         <div className="my-3 sm:my-none">
-          <Propositions address={address as `0x${string}`} />
+          <Propositions
+            address={address as `0x${string}`}
+            tokenizedBallotAddress={tokenizedBallotAddress as `0x${string}`}
+          />
         </div>
       </div>
     </>
