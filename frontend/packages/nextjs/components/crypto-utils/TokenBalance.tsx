@@ -74,6 +74,7 @@ const useTokenBalance = (myTokenAddress: `0x${string}`, address: `0x${string}`) 
     abi: deployedContracts[chains.sepolia.id]["MyToken"].abi,
     functionName: "balanceOf",
     args: [address],
+    watch: true,
   });
 
   return { data, isError, isLoading };

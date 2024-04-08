@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import * as chains from "viem/chains";
-import { useContractWrite } from "wagmi";
+import { useContractWrite, useWaitForTransaction } from "wagmi";
 
 import deployedContracts from "~~/contracts/deployedContracts";
 import { getBlockExplorerTxLink } from "~~/utils/scaffold-eth";
@@ -60,15 +60,31 @@ export default function Delegate({
         </p>
         {isSuccess && data && data.hash && (
           <p className="mt-5 mb-2">
-            <Link target="_blank" href={getBlockExplorerTxLink(chains.sepolia.id, data.hash)}>
-              {truncate(data.hash, 30)}
-            </Link>
+            <Transaction txHash={data.hash as `0x${string}`} />
           </p>
         )}
       </div>
     </div>
   );
 }
+
+const Transaction = ({ txHash }: { txHash: `0x${string}` }) => {
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  useWaitForTransaction({
+    chainId: chains.sepolia.id,
+    hash: txHash,
+    onSuccess: () => {
+      setIsSuccess(true);
+    },
+  });
+
+  return (
+    <Link target="_blank" href={getBlockExplorerTxLink(chains.sepolia.id, txHash)} className="whitespace-nowrap">
+      {isSuccess ? "✅ " : "⏳ "} {truncate(txHash, 30)}
+    </Link>
+  );
+};
 
 // TODO: move to utils or use lodash
 const truncate = (str: string, n: number) => {

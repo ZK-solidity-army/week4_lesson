@@ -8,7 +8,7 @@ import { useSignMessage, useWaitForTransaction } from "wagmi";
 import * as API from "~~/api/MyToken";
 import { getBlockExplorerTxLink } from "~~/utils/scaffold-eth";
 
-export default function Mint({ address, forceUpdate }: { address: `0x${string}`; forceUpdate: () => void }) {
+export default function Mint({ address }: { address: `0x${string}` }) {
   const [amount, setAmount] = useState<string>("");
   const [txHashes, setTxHashes] = useState<`0x${string}`[]>([]);
   const [isLoading, setLoading] = useState(false);
@@ -33,7 +33,6 @@ export default function Mint({ address, forceUpdate }: { address: `0x${string}`;
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setRequestError(null);
     setAmount(e.target.value);
-    forceUpdate();
   };
 
   return (
@@ -68,11 +67,10 @@ export default function Mint({ address, forceUpdate }: { address: `0x${string}`;
           </p>
           {txHashes.length ? (
             <div>
-              <p className="mt-5 mb-2">Previous calls tx hashes</p>
-              <ul>
+              <ul className="mt-5 mb-2">
                 {txHashes.map((txHash: string) => (
                   <li key={txHash}>
-                    <Transaction txHash={txHash as `0x${string}`} forceUpdate={forceUpdate} />
+                    <Transaction txHash={txHash as `0x${string}`} />
                   </li>
                 ))}
               </ul>
@@ -84,7 +82,7 @@ export default function Mint({ address, forceUpdate }: { address: `0x${string}`;
   );
 }
 
-const Transaction = ({ txHash, forceUpdate }: { txHash: `0x${string}`; forceUpdate: () => void }) => {
+const Transaction = ({ txHash }: { txHash: `0x${string}` }) => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useWaitForTransaction({
@@ -92,7 +90,6 @@ const Transaction = ({ txHash, forceUpdate }: { txHash: `0x${string}`; forceUpda
     hash: txHash,
     onSuccess: () => {
       setIsSuccess(true);
-      forceUpdate();
     },
   });
 
