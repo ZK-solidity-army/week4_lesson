@@ -1,18 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import * as chains from "viem/chains";
-import { useSignMessage, useWaitForTransaction } from "wagmi";
 
 import * as API from "~~/api/MyToken";
-import { getBlockExplorerTxLink } from "~~/utils/scaffold-eth";
+import Transaction from "~~/components/crypto-utils/Transaction";
 
-export default function Mint({ address, forceUpdate }: { address: `0x${string}`; forceUpdate: () => void }) {
+export default function Mint({ address }: { address: `0x${string}` }) {
   const [amount, setAmount] = useState<string>("");
   const [txHashes, setTxHashes] = useState<`0x${string}`[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const { data, isError, isSuccess } = useSignMessage();
   const [requestError, setRequestError] = useState<string | null>(null);
 
   const onClick = async () => {
@@ -33,7 +29,6 @@ export default function Mint({ address, forceUpdate }: { address: `0x${string}`;
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setRequestError(null);
     setAmount(e.target.value);
-    forceUpdate();
   };
 
   return (
@@ -60,19 +55,16 @@ export default function Mint({ address, forceUpdate }: { address: `0x${string}`;
           </div>
         </div>
         <div>
-          {isSuccess && <div className="ml-2">Signature: {data}</div>}
-          {isError && <div className="ml-2">Error signing message</div>}
           <p className="h-5 my-1">
             {isLoading && <p className="my-auto">🟡 Requesting tokens from API...</p>}
             {requestError && <p className="my-auto">🛑 {requestError}</p>}
           </p>
           {txHashes.length ? (
             <div>
-              <p className="mt-5 mb-2">Previous calls tx hashes</p>
-              <ul>
+              <ul className="mt-5 mb-2">
                 {txHashes.map((txHash: string) => (
                   <li key={txHash}>
-                    <Transaction txHash={txHash as `0x${string}`} forceUpdate={forceUpdate} />
+                    <Transaction txHash={txHash as `0x${string}`} />
                   </li>
                 ))}
               </ul>
@@ -83,26 +75,3 @@ export default function Mint({ address, forceUpdate }: { address: `0x${string}`;
     </div>
   );
 }
-
-const Transaction = ({ txHash, forceUpdate }: { txHash: `0x${string}`; forceUpdate: () => void }) => {
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  useWaitForTransaction({
-    chainId: chains.sepolia.id,
-    hash: txHash,
-    onSuccess: () => {
-      setIsSuccess(true);
-      forceUpdate();
-    },
-  });
-
-  return (
-    <Link target="_blank" href={getBlockExplorerTxLink(chains.sepolia.id, txHash)}>
-      {isSuccess ? "✅ " : "⏳ "} {truncate(txHash, 30)}
-    </Link>
-  );
-};
-
-const truncate = (str: string, n: number) => {
-  return str.length > n ? str.substr(0, n - 1) + "..." : str;
-};

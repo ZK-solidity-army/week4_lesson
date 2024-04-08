@@ -30,7 +30,7 @@ const BalanceNode = ({ address, myTokenAddress }: { address: `0x${string}`; myTo
 
   let balanceFormatted = "0";
   if (balance && decimals) {
-    balanceFormatted = (balance / BigInt(10 ** decimals)).toString();
+    balanceFormatted = (Number((balance * 1000n) / BigInt(10 ** decimals)) / 1000).toString();
   }
 
   return (
@@ -74,6 +74,7 @@ const useTokenBalance = (myTokenAddress: `0x${string}`, address: `0x${string}`) 
     abi: deployedContracts[chains.sepolia.id]["MyToken"].abi,
     functionName: "balanceOf",
     args: [address],
+    watch: true,
   });
 
   return { data, isError, isLoading };

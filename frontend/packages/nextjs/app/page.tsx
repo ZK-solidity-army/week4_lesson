@@ -23,12 +23,6 @@ const Home: NextPage = () => {
     resolveIsMinter();
   }, [isConnecting, address]);
 
-  // https://legacy.reactjs.org/docs/hooks-faq.html#is-there-something-like-forceupdate
-  // workaround to force update component
-  // because there is no global state
-  // TODO: get rid of this
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
-
   // const data = publicClient
   //   .readContract({
   //     address: myTokenAddress as string,
@@ -72,7 +66,7 @@ const Home: NextPage = () => {
             <div className="divider" />
             <div className="sm:w-full lg:w-1/2 mx-auto min-w-56">
               <div className="mx-5">
-                <Mint address={address as `0x${string}`} forceUpdate={forceUpdate} />
+                <Mint address={address as `0x${string}`} />
               </div>
             </div>
           </div>
