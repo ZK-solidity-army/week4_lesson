@@ -1,4 +1,7 @@
-# TokinzedBallot
+# Encode Group 9 TokinzedBallot
 
-[Backend](./backend/README.md)  
-[Frontend](./frontend/README.md)  
+https://encode-group-9.up.railway.app/
+https://encode-group-9-api.up.railway.app/api/
+
+[Backend](./backend/)  
+[Frontend](./frontend/)  
